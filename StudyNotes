@@ -104,3 +104,20 @@ git checkout branchname
 - 创建标签
 - 操作标签
 - **git tag<name>**
+
+##Python
+####1.输入和输出
+**print()**
+
+- 在括号中加入字符串，就可以输入指定文字
+- 可以接受多个字符串，用逗号","隔开，连成一串输出，print()会依次打印每个字符串，遇到逗号","会输出一个空格
+- 还可以打印整数或者计算结果
+
+**input()**
+```
+name = input('please enter your name:')
+print('hello,'name)
+```
+####2.缩进
+Python语法采用缩进方式，坚持使用四个空格缩进
+Python大小写敏感
