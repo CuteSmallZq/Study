@@ -103,3 +103,4 @@ git checkout branchname
 ####11.标签管理
 - 创建标签
 - 操作标签
+- **git tag<name>**
