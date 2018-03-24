@@ -291,3 +291,8 @@ scheme://host.domain:port/path/filename
 		- **height和width属性:**规定< input>元素的高度和宽度,仅适用于type="image",若浏览器不清楚图像尺寸,页面会在图像加载时闪烁
 		- **list属性:**引用的<datalist>元素中包含了< input>元素的预定义选项
 		- **min和max属性:**规定< input>元素的最小值和最大值,适用于输入的类型:number、range、date、datetime、datetime-local、month、time、week
+		- **multiple属性:**布尔属性,若设置,允许< input>一个以上的值
+		- **pattern属性:**检查< input>的正则表达式,适合text,search,url,tel,email,and password
+		- **placeholder属性:**描述输入字段预期值的提示,适合text,search,url,tel,email,and password
+		- **required属性:**布尔属性,规定提交表单前必须填写输入字段
+		- **step属性:**规定< input>元素的合法数字间隔
