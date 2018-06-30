@@ -1,0 +1,214 @@
+import java.sql.*;
+/**
+ * @author theDogKnight
+ * @date : 2018.06.30  09:26
+ * @email: 1123706238@qq.com
+ */
+public class DataBaseOperation {
+    private static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
+    private static final String URL_FORMER = "jdbc:mysql://localhost:3307/";
+   // public String USER_NAME;
+ //   public String PASSWORD;
+   // public String URL_LATTER;
+    public static Connection connection = null;
+    public static Statement statement = null ;
+    /**
+     * 连接数据库
+     * @param URL_LATTER 数据库的名称
+     * @param USER_NAME  用户名
+     * @param PASSWORD   用户密码
+     */
+    public static void setConnection(String URL_LATTER,String USER_NAME,String PASSWORD){
+        String url = URL_FORMER + URL_LATTER;
+        try {
+            Class.forName(DRIVER_NAME);
+            //获取数据库连接
+            System.out.println("Connecting to a selected database...");
+            connection = DriverManager.getConnection(url,USER_NAME,PASSWORD);
+            System.out.println("Connected database successfully");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 查找表内字段
+     * @param tableName 要操作的表的名称
+     * @param valueName 要操作的字段的名称
+     */
+    public static void searchTable(String tableName,String valueName){
+        try {
+            statement = connection.createStatement();
+            String sql = "SELECT "+valueName+" FROM "+tableName;
+            String[]value;
+            value = valueName.split(",");
+            System.out.println("reading database...");
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                for(int i =0; i<value.length;i++){
+                    System.out.println(value[i]+":"+resultSet.getString(value[i]));
+                }
+            }
+            System.out.println("read database successfully");
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 关键字搜索
+     * @param tableNmae 表的名字
+     * @param valueName 搜索值的名字
+     * @param likeName  关键字的名字
+     * @param location  关键字的匹配内容
+     */
+    public static void likeSearchTable(String tableNmae,String valueName,String likeName, String location){
+        try {
+            System.out.println("Creating Statement...");
+            statement = connection.createStatement();
+            String[]value;
+            value = valueName.split(",");
+            System.out.println("Fetching records with condition...");
+            String sql = "SELECT "+valueName+" FROM "+tableNmae+" WHERE "+location+" LIKE '%"+likeName+"%'";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                for(int i =0; i<value.length;i++){
+                    System.out.println(value[i]+":"+resultSet.getString(value[i]));
+                }
+            }
+            System.out.println("Fetched records with conditon successfully...");
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void whereSearchTable(String tableNmae,String valueName,String condition){
+        try {
+            System.out.println("Creating Statement...");
+            statement = connection.createStatement();
+            String[]value;
+            value = valueName.split(",");
+            System.out.println("Fetching records with condition...");
+            String sql = "SELECT "+valueName+" FROM "+tableNmae +
+                    " WHERE "+condition;
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                for(int i =0; i<value.length;i++){
+                    System.out.println(value[i]+":"+resultSet.getString(value[i]));
+                }
+            }
+            System.out.println("Fetched records with WHERE conditon successfully...");
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 向表内插入数据
+     * @param tableName 表的名称
+     * @param insertWhat 插入的内容
+     */
+    public static void insertTable(String tableName,String insertWhat){
+        try {
+            System.out.println("Inserting records into the table "+tableName+"...");
+            statement = connection.createStatement();
+            String sql = "INSERT INTO " + tableName +" VALUE (" + insertWhat + ")" ;
+            statement.executeUpdate(sql);
+            System.out.println("Inserted records into the table successfully...");
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 更新表中的数据
+     * @param tableName 表的名字
+     * @param valueName 条件字段的名字
+     * @param location  条件字段的条件
+     * @param setWhat   设置字段的内容
+     */
+    public static void updateTable(String tableName,String valueName, String location,String setWhat){
+        try {
+            System.out.println("Creating Statement...");
+            statement = connection.createStatement();
+            System.out.println("Updating data...");
+            String sql = "UPDATE " + tableName + " SET "+setWhat+" WHERE "+ valueName +" in ("+location+")";
+            statement.executeUpdate(sql);
+            System.out.println("Updated data successfully...");
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 删除表中字段
+     * @param tableName 表名
+     * @param deleteWhere 删除的条件
+     */
+    public static void deleteTable(String tableName,String deleteWhere){
+        System.out.println("Creating statement...");
+        try {
+            statement = connection.createStatement();
+            System.out.println("Deleting data...");
+            String sql = "DELETE FROM " +tableName+
+                    " WHERE "+deleteWhere;
+            statement.executeUpdate(sql);
+            System.out.println("Deleted data successfully...");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 排序查询数据库表内内容
+     * @param tableName 表名字
+     * @param orderWhat 排序查看的字段名字“,”隔开
+     * @param howToOrder DESC降序 ASC升序
+     * @param orderBase 排序的条件字段
+     */
+    public static void orderTable(String tableName,String orderWhat,String howToOrder,String orderBase){
+        try {
+            System.out.println("Creating statement...");
+            statement = connection.createStatement();
+            String oderWay = "ascending";
+            if(howToOrder.equals("DESC")){
+                oderWay = "descending";
+            }
+            System.out.println("Fetching records in "+oderWay+" order by "+orderBase+" field ...");
+            String sql = "SELECT "+orderWhat+" FROM "+tableName+
+                    " ORDER BY "+orderBase+" "+howToOrder;
+            System.out.println(sql);
+            String[]value;
+            value = orderWhat.split(",");
+            ResultSet resultSet =statement.executeQuery(sql);
+            while (resultSet.next()){
+                for(int i =0; i<value.length;i++){
+                    System.out.println(value[i]+":"+resultSet.getString(value[i]));
+                }
+            }
+            System.out.println("Fetched records in "+oderWay+" order by "+orderBase+" field successfully...");
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //debug{}
+    public static void main(String[]args) {
+        setConnection("mysql", "root", "gaobaiqiqiu98");
+       //updateTable("Employees","first","'b'","age = 2");
+       // deleteTable("Employees","age = 2");
+        // insertTable("Employees", "6,'d'");
+        // insertTable("Employees", "100,w'");
+         //insertTable("Employees", "54,'e'");
+        // insertTable("Employees", "75,'l'");
+        // insertTable("Employees", "10,'c'");
+        // insertTable("Employees", "9,'a'");
+      //  searchTable("Employees","age,first");
+        orderTable("Employees","age,first","DESC","age");
+       // searchTable("Employees","age,first");
+    }
+}
